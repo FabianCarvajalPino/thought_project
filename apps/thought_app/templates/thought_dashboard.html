@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/thought_style.css' %}">
+</head>
+<body>
+    <nav class="d-flex justify-content-between navbar navbar-expand-lg navbar-light bg-light">
+        <h1 class="col-4">Hola {{request.session.username}} {{request.session.userlast}}!</h1>
+        <a class="col-2 btn btn-danger" href="/logout">Log out</a>
+    </nav>
+    <div class="wrapper">
+        {% if messages %}
+        <ul class="messages">    
+            {% for message in messages %}    
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <form action="/thoughts/add" method="POST">
+            {% csrf_token %}
+            <input type="text" name="thought" class="form_control" size="80" placeholder="Postea un pensamiento aqui! Minimo 5 caracteres">
+            <input class="btn btn-primary" type="submit" value="Agregar deseo">
+        </form>
+        <table>
+            {% for thought in thoughts %}
+                <tr>
+                    <td class="align-baseline">{{thought.owner.first_name}} dice:</td>
+                    <td>
+                        <textarea readonly class="d-block" name="" id="" cols="60" rows="2">{{thought.thought}}</textarea>
+                        <div class="d-flex justify-content-between">
+                            <a href="/thoughts/{{thought.id}}">Detalles</a>
+                            <p>{{thought.likes.count}} personas gustan de este deseo</p>
+                        </div>
+                    </td>
+                    <td class="align-baseline">
+                        {% if user_selected == thought.owner %}
+                            <a class="btn btn-danger" href="/thoughts/{{thought.id}}/delete">Borrar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</body>
+</html>

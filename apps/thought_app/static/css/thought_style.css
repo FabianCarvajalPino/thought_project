@@ -1,0 +1,11 @@
+.wrapper{
+    width: 1000px;
+    margin: 0px auto;
+}
+
+.messages{
+    color: red;
+    text-align: center;
+    outline: 1px solid red;
+    width: 600px;
+}
